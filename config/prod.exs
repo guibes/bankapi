@@ -12,7 +12,7 @@ use Mix.Config
 config :bankapi, BankapiWeb.Endpoint,
   server: true,
   http: [port: {:system, "PORT"}],
-  url: [host:  System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
+  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 # Do not print debug messages in production
