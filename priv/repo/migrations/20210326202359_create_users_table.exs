@@ -40,6 +40,7 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
     create unique_index(:users, [:cpf])
     create unique_index(:users, [:email])
     create unique_index(:users, [:referral_code])
+
     create constraint("users", "birth_date_must_be_after_today_or_today",
              check: "birth_date <= NOW()"
            )

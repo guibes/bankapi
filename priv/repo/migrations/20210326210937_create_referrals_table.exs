@@ -14,7 +14,14 @@ defmodule Bankapi.Repo.Migrations.CreateReferralsTable do
   def up do
     create table(:referrals) do
       add :user_id, references(:users, type: :binary_id, on_delete: :delete_all)
-      add :referral_code, references(:users, column: :referral_code, type: :string, on_delete: :delete_all, size: 8)
+
+      add :referral_code,
+          references(:users,
+            column: :referral_code,
+            type: :string,
+            on_delete: :delete_all,
+            size: 8
+          )
 
       timestamps()
     end
