@@ -46,6 +46,7 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
     create constraint("users", "birth_date_must_be_after_today_or_today",
              check: "birth_date <= NOW()"
            )
+
     create constraint("users", "cpf_must_have_only_digits", check: "cpf ~ '^[[:digit:]]{11}$'")
   end
 
