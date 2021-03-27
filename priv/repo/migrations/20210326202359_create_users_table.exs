@@ -27,24 +27,25 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
       add :name, :string
       add :email, :string
       add :cpf, :string, size: 11, comment: "CPF is a brazilian citizen ID"
-      add :birth_date, :utc_datetime
+      add :birth_date, :date
       add :gender, :string
       add :city, :string
       add :state, :string
       add :country, :string
-      add :referral_code, :string, size: 8, comment: "Refferal of the user"
+      add :referral_code, :string, size: 8, comment: "Referral of the user_code"
+      add :user_code, :string, size: 8, comment: "User code to use in referral"
+      add :user_status, :string, comment: "Status of the user, can be: pending or complete"
 
       timestamps()
     end
 
     create unique_index(:users, [:cpf])
     create unique_index(:users, [:email])
-    create unique_index(:users, [:referral_code])
+    create unique_index(:users, [:user_code])
 
     create constraint("users", "birth_date_must_be_after_today_or_today",
              check: "birth_date <= NOW()"
            )
-
     create constraint("users", "cpf_must_have_only_digits", check: "cpf ~ '^[[:digit:]]{11}$'")
   end
 
