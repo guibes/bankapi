@@ -7,7 +7,6 @@ defmodule Bankapi.User do
   alias Bankapi.UserCode
   import Ecto.Changeset
 
-
   @primary_key {:id, :binary_id, autogenerate: true}
   @required_params [:cpf]
   @optional_params [:name, :email, :birth_date, :city, :state, :country]
@@ -63,7 +62,9 @@ defmodule Bankapi.User do
         changeset
         |> put_change(:user_code, UserCode.generate())
         |> put_change(:status, "complete")
-      _ -> put_change(changeset, :status, "pending")
+
+      _ ->
+        put_change(changeset, :status, "pending")
     end
   end
 
