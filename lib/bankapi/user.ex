@@ -12,7 +12,7 @@ defmodule Bankapi.User do
   @optional_params [:name, :email, :birth_date, :city, :state, :country]
   @other_params [:gender, :referral_code]
 
-  @updateable_params [:name, :email, :city, :state, :country, :gender]
+  @updateable_params [:name, :email, :city, :state, :country, :gender, :birth_date]
 
   schema "users" do
     field :name, :string
@@ -43,29 +43,47 @@ defmodule Bankapi.User do
     |> validate_format(:cpf, cpf_regex())
     |> validate_format(:email, email_regex())
     |> unique_constraint([:cpf, :email])
-    |> create_user_code()
+    |> create_code()
+    |> validate_code_fields()
   end
 
   @doc """
   Changeset to update an user
   """
-  def update_changeset(params) do
-    %__MODULE__{}
-    |> cast(params, @updateable_params)
+  def update_changeset(%Bankapi.User{status: status} = user, params) do
+    user
+    |> cast(params, cast_params(status))
+    |> validate_activated(status)
     |> validate_format(:email, email_regex())
     |> unique_constraint([:email])
+    |> validate_code_fields()
   end
 
-  defp create_user_code(changeset) do
-    case validate_required(changeset, @required_params ++ @optional_params).errors do
-      [] ->
-        changeset
-        |> put_change(:user_code, UserCode.generate())
-        |> put_change(:status, "complete")
-
-      _ ->
-        put_change(changeset, :status, "pending")
+  defp validate_activated(changeset, status) do
+    case status do
+      "complete" -> validate_required(changeset, @updateable_params)
+      _ -> changeset
     end
+  end
+
+  defp cast_params(status) do
+    case status do
+      "pending" -> @updateable_params ++ @other_params
+      _ -> @updateable_params
+    end
+  end
+
+  # TODO fix one time create
+  defp validate_code_fields(changeset) do
+    case validate_required(changeset, @required_params ++ @optional_params).errors do
+      [] -> put_change(changeset, :status, "complete")
+      _ -> put_change(changeset, :status, "pending")
+    end
+  end
+
+  defp create_code(changeset) do
+    changeset
+    |> put_change(:user_code, UserCode.generate())
   end
 
   defp email_regex() do
