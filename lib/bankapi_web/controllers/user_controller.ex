@@ -17,4 +17,15 @@ defmodule BankapiWeb.UserController do
       |> render("create.json", user: user)
     end
   end
+
+  @doc """
+  Function to get all referral users by a code.
+  """
+  def get_all_users_by_referral(conn, params) do
+    with {:ok, users} <- Bankapi.get_user_referrals(params) do
+      conn
+      |> put_status(:ok)
+      |> render("get_all_referrals.json", users: users)
+    end
+  end
 end
