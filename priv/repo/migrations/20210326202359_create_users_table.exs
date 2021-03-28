@@ -32,10 +32,9 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
       add :city, :string
       add :state, :string
       add :country, :string
-      add :status, :string
+      add :status, :string, comment: "Status of the user, can be: pending or complete"
       add :referral_code, :string, size: 8, comment: "Referral of the user_code"
       add :user_code, :string, size: 8, comment: "User code to use in referral"
-      add :user_status, :string, comment: "Status of the user, can be: pending or complete"
 
       timestamps()
     end
