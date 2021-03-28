@@ -20,9 +20,11 @@ defmodule BankapiWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", BankapiWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", BankapiWeb do
+    pipe_through :api
+
+    post "user", UserController, :create_or_update
+  end
 
   # Enables LiveDashboard only for development
   #
