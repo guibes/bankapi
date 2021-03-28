@@ -12,7 +12,7 @@ defmodule Bankapi.User do
   @optional_params [:name, :email, :birth_date, :city, :state, :country]
   @other_params [:gender, :referral_code]
 
-  @updateable_params [:name, :email, :city, :state, :country, :gender, :birth_date]
+  @updateable_params [:name, :email, :city, :state, :country, :birth_date]
 
   schema "users" do
     field :name, :string
@@ -38,11 +38,12 @@ defmodule Bankapi.User do
     %__MODULE__{}
     |> cast(params, @required_params ++ @optional_params ++ @other_params)
     |> validate_required(@required_params)
+    |> unique_constraint(:cpf)
+    |> unique_constraint(:email)
     |> validate_length(:cpf, min: 11, max: 11)
     |> validate_length(:referral_code, min: 8, max: 8)
     |> validate_format(:cpf, cpf_regex())
     |> validate_format(:email, email_regex())
-    |> unique_constraint([:cpf, :email])
     |> create_code()
     |> validate_code_fields()
   end
@@ -55,7 +56,7 @@ defmodule Bankapi.User do
     |> cast(params, cast_params(status))
     |> validate_activated(status)
     |> validate_format(:email, email_regex())
-    |> unique_constraint([:email])
+    |> unique_constraint(:email)
     |> validate_code_fields()
   end
 
