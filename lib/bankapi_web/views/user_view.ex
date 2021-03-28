@@ -1,6 +1,7 @@
 defmodule BankapiWeb.UserView do
   use BankapiWeb, :view
   alias Bankapi.User
+  alias BankapiWeb.UserView
 
   def render("create.json", %{
         user: %User{
@@ -56,5 +57,21 @@ defmodule BankapiWeb.UserView do
           }
         }
     end
+  end
+
+  def render("get_user_referral.json", %{
+        user: %User{
+          id: id,
+          name: name
+        }
+      }) do
+    %{
+      id: id,
+      name: name
+    }
+  end
+
+  def render("get_all_referrals.json", %{users: users}) do
+    %{users: render_many(users, UserView, "get_user_referral.json")}
   end
 end
