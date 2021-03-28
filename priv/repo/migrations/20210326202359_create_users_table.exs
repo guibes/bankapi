@@ -24,10 +24,12 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
   """
   def up do
     create table(:users) do
-      add :name, :string
-      add :email, :string
-      add :cpf, :string, size: 11, comment: "CPF is a brazilian citizen ID"
-      add :birth_date, :date
+      add :name, :binary
+      add :email, :binary
+      add :email_hash, :binary
+      add :cpf, :binary, comment: "CPF is a brazilian citizen ID"
+      add :cpf_hash, :binary
+      add :birth_date, :binary
       add :gender, :string
       add :city, :string
       add :state, :string
@@ -39,15 +41,9 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
       timestamps()
     end
 
-    create unique_index(:users, [:cpf])
-    create unique_index(:users, [:email])
+    create unique_index(:users, [:cpf_hash])
+    create unique_index(:users, [:email_hash])
     create unique_index(:users, [:user_code])
-
-    create constraint("users", "birth_date_must_be_after_today_or_today",
-             check: "birth_date <= NOW()"
-           )
-
-    create constraint("users", "cpf_must_have_only_digits", check: "cpf ~ '^[[:digit:]]{11}$'")
   end
 
   @doc """
