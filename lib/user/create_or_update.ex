@@ -9,7 +9,7 @@ defmodule Bankapi.User.CreateorUpdate do
   Case the referral code not exists or user status of code is pending, return errors.
   """
 
-  def create_or_update(params) do
+  def call(params) do
     %{"cpf" => cpf} = params
 
     case Repo.get_by(User, cpf: cpf) do
