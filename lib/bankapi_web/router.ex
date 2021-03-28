@@ -23,7 +23,8 @@ defmodule BankapiWeb.Router do
   scope "/api", BankapiWeb do
     pipe_through :api
 
-    post "user", UserController, :create_or_update
+    post "/user", UserController, :create_or_update
+    get "/user/referrals/:user_code", UserController, :get_all_users_by_referral
   end
 
   # Enables LiveDashboard only for development
