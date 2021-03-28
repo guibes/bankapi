@@ -12,7 +12,7 @@ defmodule Bankapi.User.CreateorUpdate do
   def call(params) do
     %{"cpf" => cpf} = params
 
-    case Repo.get_by(User, cpf: cpf) do
+    case Repo.get_by(User, cpf_hash: cpf) do
       nil -> User.changeset(params)
       %User{} = user -> User.update_changeset(user, params)
     end

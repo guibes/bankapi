@@ -9,6 +9,8 @@ defmodule Bankapi.Application do
     children = [
       # Start the Ecto repository
       Bankapi.Repo,
+      # Start vault to Ecto Cloak
+      Bankapi.Vault,
       # Start the Telemetry supervisor
       BankapiWeb.Telemetry,
       # Start the PubSub system

@@ -15,10 +15,12 @@ defmodule Bankapi.User do
   @updateable_params [:name, :email, :city, :state, :country, :birth_date]
 
   schema "users" do
-    field :name, :string
-    field :email, :string
-    field :cpf, :string
-    field :birth_date, :date
+    field :name, Bankapi.Encrypted.Binary
+    field :email, Bankapi.Encrypted.Binary
+    field :email_hash, Cloak.Ecto.SHA256
+    field :cpf, Bankapi.Encrypted.Binary
+    field :cpf_hash, Cloak.Ecto.SHA256
+    field :birth_date, Bankapi.Encrypted.Date
     field :gender, :string
     field :city, :string
     field :state, :string
@@ -38,8 +40,9 @@ defmodule Bankapi.User do
     %__MODULE__{}
     |> cast(params, @required_params ++ @optional_params ++ @other_params)
     |> validate_required(@required_params)
-    |> unique_constraint(:cpf)
-    |> unique_constraint(:email)
+    |> create_hashs()
+    |> unique_constraint(:cpf_hash)
+    |> unique_constraint(:email_hash)
     |> validate_length(:cpf, min: 11, max: 11)
     |> validate_length(:referral_code, min: 8, max: 8)
     |> validate_format(:cpf, cpf_regex())
@@ -56,8 +59,15 @@ defmodule Bankapi.User do
     |> cast(params, cast_params(status))
     |> validate_activated(status)
     |> validate_format(:email, email_regex())
-    |> unique_constraint(:email)
+    |> unique_constraint(:email_hash)
+    |> create_hashs()
     |> validate_code_fields()
+  end
+
+  defp create_hashs(changeset) do
+    changeset
+    |> put_change(:cpf_hash, get_field(changeset, :cpf))
+    |> put_change(:email_hash, get_field(changeset, :email))
   end
 
   defp validate_activated(changeset, status) do
