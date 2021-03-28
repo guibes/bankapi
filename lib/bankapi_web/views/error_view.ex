@@ -15,8 +15,14 @@ defmodule BankapiWeb.ErrorView do
     Phoenix.Controller.status_message_from_template(template)
   end
 
+  # TODO work with error in get all
+
   def render("400.json", %{result: %Changeset{} = changeset}) do
     %{message: translate_erros(changeset)}
+  end
+
+  def render("400.json", %{result: result}) do
+    %{message: %{error: result}}
   end
 
   defp translate_erros(changeset) do
