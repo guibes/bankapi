@@ -84,7 +84,6 @@ defmodule Bankapi.User do
     end
   end
 
-  # TODO fix one time create
   defp validate_code_fields(changeset) do
     case validate_required(changeset, @required_params ++ @optional_params).errors do
       [] -> put_change(changeset, :status, "complete")
