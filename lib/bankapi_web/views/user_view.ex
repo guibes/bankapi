@@ -72,6 +72,9 @@ defmodule BankapiWeb.UserView do
   end
 
   def render("get_all_referrals.json", %{users: users}) do
-    %{users: render_many(users, UserView, "get_user_referral.json")}
+    %{
+      referrals: render_many(users, UserView, "get_user_referral.json"),
+      message: "Listing all referrals"
+    }
   end
 end
