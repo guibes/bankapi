@@ -11,7 +11,7 @@ defmodule Bankapi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      #Add ExCoveralls to check test cover
+      # Add ExCoveralls to check test cover
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
