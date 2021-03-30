@@ -19,5 +19,4 @@ defmodule Bankapi.User.Update do
   end
 
   def call(_params), do: {:error, "insert a cpf"}
-
 end

@@ -4,28 +4,27 @@ defmodule Bankapi.UserTest do
   alias Bankapi.User
 
   @valid_attrs_complete %{
-      cpf: "12345678934",
-      password: "12345678912",
-      country: "USA",
-      city: "Vitorino",
-      birth_date: "1993-06-02",
-      state: "Paraná",
-      name: "Teste Teste",
-      email: "tutaaa@tsaa.com"
+    cpf: "12345678934",
+    password: "12345678912",
+    country: "USA",
+    city: "Vitorino",
+    birth_date: "1993-06-02",
+    state: "Paraná",
+    name: "Teste Teste",
+    email: "tutaaa@tsaa.com"
   }
 
   @valid_attrs_pending %{
-      cpf: "12345678934",
-      password: "12345678912"
+    cpf: "12345678934",
+    password: "12345678912"
   }
 
   @invalid_attrs %{
-      cpf: "1234567893",
-      password: "123456",
+    cpf: "1234567893",
+    password: "123456"
   }
 
   describe "changeset/1" do
-
     test "changeset with valid attributes complete" do
       changeset = User.changeset(@valid_attrs_complete)
       assert changeset.valid?
@@ -61,8 +60,5 @@ defmodule Bankapi.UserTest do
       changeset = User.update_changeset(%User{}, @invalid_attrs)
       refute changeset.valid?
     end
-
   end
-
-
 end

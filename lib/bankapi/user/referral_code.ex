@@ -1,5 +1,4 @@
 defmodule Bankapi.User.ReferralCode do
-
   alias Bankapi.{Repo, User}
   import Ecto.Changeset
 
