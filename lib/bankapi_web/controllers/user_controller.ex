@@ -32,6 +32,9 @@ defmodule BankapiWeb.UserController do
               {:forbidden, "Do not have permission"}
           end
         end
+
+      {:error, result} ->
+        {:error, result}
     end
   end
 
