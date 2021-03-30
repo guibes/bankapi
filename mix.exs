@@ -47,6 +47,10 @@ defmodule Bankapi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:puid, "~> 1.1"},
+      {:comeonin, "~> 5.3"},
+      # 2.0
+      {:argon2_elixir, "~> 2.0"},
+      {:guardian, "~> 2.1"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]

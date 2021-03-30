@@ -70,8 +70,6 @@ jobs:
     if: github.ref == 'refs/heads/master'
 
     runs-on: ubuntu-latest
-    env:
-      CLOAK_KEY: ${{ secrets.CLOAK_KEY }}
 
     steps:
       - uses: actions/checkout@v2

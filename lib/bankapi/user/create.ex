@@ -1,23 +1,20 @@
-defmodule Bankapi.User.CreateorUpdate do
+defmodule Bankapi.User.Create do
   @moduledoc """
-  Module to create or update a user in the database.
+  Module to update a user in the database.
   """
   alias Bankapi.{Repo, User}
+  import Ecto.Changeset
 
   @doc """
-  Function to create or update a user in the database using Repo.
+  Function to update a user in the database using Repo.
   Case the referral code not exists or user status of code is pending, return errors.
   """
 
   def call(params) do
-    %{"cpf" => cpf} = params
-
-    case Repo.get_by(User, cpf_hash: cpf) do
-      nil -> User.changeset(params)
-      %User{} = user -> User.update_changeset(user, params)
-    end
+    params
+    |> User.changeset()
     |> validate_referral_code()
-    |> Repo.insert_or_update()
+    |> Repo.insert()
   end
 
   defp validate_referral_code(changeset) do
@@ -30,10 +27,10 @@ defmodule Bankapi.User.CreateorUpdate do
   defp handle_referral(changeset, referral_code) do
     case Repo.get_by(User, user_code: referral_code) do
       nil ->
-        Ecto.Changeset.add_error(changeset, :referral_code, "invalid referral_code")
+        add_error(changeset, :referral_code, "invalid referral_code")
 
       %User{status: "pending"} ->
-        Ecto.Changeset.add_error(changeset, :referral_code, "user of referral_code is pending")
+        add_error(changeset, :referral_code, "user of referral_code is pending")
 
       _ ->
         changeset
