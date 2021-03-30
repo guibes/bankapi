@@ -10,7 +10,15 @@ defmodule Bankapi.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      #Add ExCoveralls to check test cover
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -48,11 +56,11 @@ defmodule Bankapi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:puid, "~> 1.1"},
       {:comeonin, "~> 5.3"},
-      # 2.0
       {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 2.1"},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
