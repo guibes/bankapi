@@ -8,15 +8,19 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
   Function to create the users table in the database.
 
   Contraints to check:
-  - birth_date is smaller than today
-  - cpf only have digits in string
+  - cpf_hash unique
+  - email_hash unique
+  - user_code unique
 
   Reference of fields:
-  - name, the user's name
-  - email, the user's email address
-  - cpf, the user's brazilian CPF ID, accepts only digits
-  - birth_date, the user's birth date, must be less or equal than today
-  - gender, the user's gender, gender can be null.
+  - name, the user's name encrypted
+  - email, the user's email address encrypted
+  - email_hash, the user's email hash
+  - password_hash, the user's password hash
+  - cpf, the user's brazilian CPF ID, accepts only digits encrypted
+  - cpf_hash, the user's brazilian CPF ID hash
+  - birth_date, the user's birth date, must be less or equal than today encrypted
+  - gender, the user's gender, gender can be null
   - city, the user's city
   - state, the user's state or province
   - country, the user's country
@@ -27,6 +31,7 @@ defmodule Bankapi.Repo.Migrations.CreateUsersTable do
       add :name, :binary
       add :email, :binary
       add :email_hash, :binary
+      add :password_hash, :string
       add :cpf, :binary, comment: "CPF is a brazilian citizen ID"
       add :cpf_hash, :binary
       add :birth_date, :binary
