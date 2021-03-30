@@ -18,13 +18,13 @@ defmodule Bankapi.User.GetUserReferrals do
   defp check_user_code(user_code) do
     case Repo.get_by(User, user_code: user_code) do
       nil ->
-        {:error, "invalid user code"}
+        {:error, "Invalid user code"}
 
       %User{status: "pending"} ->
-        {:error, "pending user register"}
+        {:error, "Pending user register"}
 
       %User{user_code: user_code, status: "complete"} ->
-        {:ok, from(u in User, where: u.referral_code == ^user_code)}
+        {:ok, from(u in User, where: u.referral_code == ^user_code and u.status == "complete")}
     end
   end
 
@@ -35,5 +35,6 @@ defmodule Bankapi.User.GetUserReferrals do
   end
 
   defp handle_code_response({:error, code}), do: {:error, code}
+  defp handle_response([]), do: {:not_found, "User has no referrals"}
   defp handle_response(users), do: {:ok, users}
 end
