@@ -8,7 +8,7 @@ defmodule Bankapi.User do
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  @required_params [:cpf]
+  @required_params [:cpf, :password]
   @optional_params [:name, :email, :birth_date, :city, :state, :country]
   @other_params [:gender, :referral_code]
 
@@ -18,6 +18,8 @@ defmodule Bankapi.User do
     field :name, Bankapi.Encrypted.Binary
     field :email, Bankapi.Encrypted.Binary
     field :email_hash, Cloak.Ecto.SHA256
+    field :password, :string, virtual: true
+    field :password_hash, :string
     field :cpf, Bankapi.Encrypted.Binary
     field :cpf_hash, Cloak.Ecto.SHA256
     field :birth_date, Bankapi.Encrypted.Date
@@ -43,6 +45,7 @@ defmodule Bankapi.User do
     |> create_hashs()
     |> unique_constraint(:cpf_hash)
     |> unique_constraint(:email_hash)
+    |> validate_length(:password, min: 8)
     |> validate_length(:cpf, min: 11, max: 11)
     |> validate_length(:referral_code, min: 8, max: 8)
     |> validate_format(:cpf, cpf_regex())
@@ -57,6 +60,7 @@ defmodule Bankapi.User do
   def update_changeset(%Bankapi.User{status: status} = user, params) do
     user
     |> cast(params, cast_params(status))
+    |> validate_length(:password, min: 8)
     |> validate_activated(status)
     |> validate_format(:email, email_regex())
     |> unique_constraint(:email_hash)
@@ -65,9 +69,19 @@ defmodule Bankapi.User do
   end
 
   defp create_hashs(changeset) do
-    changeset
-    |> put_change(:cpf_hash, get_field(changeset, :cpf))
-    |> put_change(:email_hash, get_field(changeset, :email))
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{password: pass, cpf: cpf, email: email}} ->
+        changeset
+        |> put_change(:cpf_hash, cpf)
+        |> put_change(:email_hash, email)
+        |> put_change(:password_hash, Argon2.hash_pwd_salt(pass))
+
+      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
+        put_change(changeset, :password_hash, Argon2.hash_pwd_salt(pass))
+
+      _ ->
+        changeset
+    end
   end
 
   defp validate_activated(changeset, status) do
@@ -79,21 +93,27 @@ defmodule Bankapi.User do
 
   defp cast_params(status) do
     case status do
-      "pending" -> @updateable_params ++ @other_params
-      _ -> @updateable_params
+      "pending" -> @required_params ++ @updateable_params ++ @other_params
+      _ -> @required_params ++ @updateable_params
     end
   end
 
   defp validate_code_fields(changeset) do
-    case validate_required(changeset, @required_params ++ @optional_params).errors do
+    case validate_required(changeset, @optional_params).errors do
       [] -> put_change(changeset, :status, "complete")
       _ -> put_change(changeset, :status, "pending")
     end
   end
 
   defp create_code(changeset) do
-    changeset
-    |> put_change(:user_code, UserCode.generate())
+    case changeset do
+      %Ecto.Changeset{valid?: true} ->
+        changeset
+        |> put_change(:user_code, UserCode.generate())
+
+      _ ->
+        changeset
+    end
   end
 
   defp email_regex() do
