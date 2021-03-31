@@ -44,7 +44,7 @@ POST  ${url_base}/api/user
 
 This need receive a body param, like described below:
 
-``` json
+``` jsonc
 {
     "cpf": "12345678935", //11 digits cpf ID
     "password": "12345678912", //password min 8 digits
@@ -63,7 +63,7 @@ This is a complete register data, the API will return this:
 
 (HTTP response code 201)
 
-``` json
+``` jsonc
 {
     "message": "User register complete",
     "user": {
@@ -87,7 +87,7 @@ If send part of data we have a return like that:
 
 (HTTP response code 201)
 
-``` json
+``` jsonc
 {
     "message": "User register pending",
     "user": {
@@ -128,7 +128,7 @@ Case try make an operation unauthorized the API will return:
 
 (HTTP response code 401)
 
-``` json
+``` jsonc
 {
     "message": {
         "error": "Insert user and password"
@@ -142,7 +142,7 @@ Case try make an operation with a wrong user the API will return:
 
 (HTTP response code 401)
 
-``` json
+``` jsonc
 {
     "message": {
         "error": "User not found"
@@ -156,7 +156,7 @@ Case try make an operation with a invalid password:
 
 (HTTP response code 401)
 
-``` json
+``` jsonc
 {
     "message": {
         "error": "invalid password"
@@ -170,7 +170,7 @@ Case try make an operation with another user the API will return:
 
 (HTTP response code 403)
 
-``` json
+``` jsonc
 {
     "message": {
         "error": "Do not have permission"
@@ -192,7 +192,7 @@ GET  ${url_base}/api/user/{user_code}/referrals
 
 If the authorization is ok and user have referrals, the API will respond this:
 
-``` json
+``` jsonc
 {
     "message": "Listing all referrals",
     "referrals": [
