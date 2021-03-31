@@ -76,8 +76,10 @@ defmodule Bankapi.User do
         |> put_change(:email_hash, email)
         |> put_change(:password_hash, Argon2.hash_pwd_salt(pass))
 
-      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
-        put_change(changeset, :password_hash, Argon2.hash_pwd_salt(pass))
+      %Ecto.Changeset{changes: %{cpf: cpf, password: pass}} ->
+        changeset
+        |> put_change(:cpf_hash, cpf)
+        |> put_change(:password_hash, Argon2.hash_pwd_salt(pass))
 
       _ ->
         changeset
