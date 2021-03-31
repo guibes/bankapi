@@ -4,6 +4,8 @@
 
 It's a simple API for a bank, this API the user can create a register, using CPF(is a unique brazilian ID) and PASSWORD, if the user create a complete account the API will return a unique code with 8 digits, this code can be used by the other users in register, this is called referral code. Case the user put incomplete data will take a status incomplete and will not return the code.
 
+***All the user sensitive data will be encrypted in database, the encryption use AES.GCM algorithm, for password use the Argon2 algorithm. To use this function we must have a enviroment variable setted, called ```CLOAK_KEY```. In Run in your local enviroment section you can see with more details.***
+
 ***If user need complete the register, will ask user and password. This user and password is the CPF and Password registered before.***
 
 The API can list all referrals of one user too, but this need the ***Authentication***.
@@ -237,6 +239,32 @@ This is a open-source project so anyone can contribuite, just follow our rules a
 ## Run in your local enviroment
 
 To start your Phoenix server:
+
+Enviroment Variables:
+
+``` bash
+export CLOAK_KEY="your-encryption-key"
+```
+
+This key can be generated using ***iex***, just open the ***iex*** in terminal:
+
+```bash
+iex -S mix
+```
+
+Inside iex we just need create the key:
+
+``` elixir
+32 |> :crypto.strong_rand_bytes() |> Base.encode64()
+```
+
+This command will respond a good key to encrypt our user sensitive data.
+
+```elixir
+"xvbaGxqlwX4+sUg3qO+u/v62rShncj8BVaMmB7VEE3o="
+```
+
+Now can make the default Phoenix configuration:
 
 - Install dependencies with `mix deps.get`.
 - Create and migrate your database with `mix ecto.setup`.
